@@ -33,7 +33,11 @@ void  Keccak::round(int ri) {
 	uint64_t B[25] = {0};
 	for (int x = 0; x < 5; ++x) {
 		C[x] = states[5*0+x] ^ states[5*1+x] ^ states[5*2+x] ^ states[5*3+x] ^ states[5*4+x];
-		D[x] = C[(x >=1 ? x-1 : 0)%5] ^ rot(C[(x+1)%5], 1);
+    }
+	for (int x = 0; x < 5; ++x) {
+		D[x] = C[(x+4)%5] ^ rot(C[(x+1)%5], 1);
+    }
+	for (int x = 0; x < 5; ++x) {
 		for (int y = 0; y < 5; ++y)
 			states[5*y + x] = states[5*y + x] ^ D[x];
 	}
@@ -52,6 +56,15 @@ void  Keccak::round(int ri) {
 	}
 	/* iota step*/
 	states[0] = states[0] ^ RC[ri];
+
+    cout << "======================\n";
+    cout << "Round " <<dec<< ri << "\n"; 
+	for (int i=0; i < STATE_SIZE; ++i) {
+		cout <<"0x" << hex << states[i] << " ";
+		if (( i+1) % 5 == 0) {
+			cout << "\n";
+		}
+	}
 }
 
 
@@ -59,6 +72,7 @@ int main() {
 	uint64_t a[25] = {0};
 	Keccak k = Keccak(a);
 	uint64_t* s = k.keccak_1600();
+    cout << "=====Final=====\n";
 	for (int i=0; i < STATE_SIZE; ++i) {
 		cout << hex << s[i] << " ";
 		if (( i+1) % 5 == 0) {
