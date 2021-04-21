@@ -2,6 +2,7 @@
 
 #include <cstdint>
 
+const uint8_t STATE_SIZE = 25;
 const uint8_t ROUNDS = 24;
 const uint8_t WIDTH = 64;
 
@@ -26,10 +27,10 @@ static const uint8_t r[25] = {
 
 class Keccak {
 private:
-	uint64_t states[25] = {};
-	uint64_t* round(uint64_t* message);
+	uint64_t* states;
+	void round(int r);
 
 public:
-	Keccak();
-	uint64_t* keccak_1600(uint64_t* message);
+	Keccak(uint64_t* A);
+	uint64_t* keccak_1600();
 };
