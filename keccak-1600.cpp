@@ -67,17 +67,3 @@ void  Keccak::round(int ri) {
 	}
 }
 
-
-int main() {
-	uint64_t a[25] = {0};
-	Keccak k = Keccak(a);
-	uint64_t* s = k.keccak_1600();
-    cout << "=====Final=====\n";
-	for (int i=0; i < STATE_SIZE; ++i) {
-		cout << hex << s[i] << " ";
-		if (( i+1) % 5 == 0) {
-			cout << "\n";
-		}
-	}
-	return 0;
-}
