@@ -13,8 +13,9 @@ FetchContent_Declare(
     URL https://github.com/google/googletest/archive/refs/tags/release-1.10.0.zip
 )
 
-add_library(Keccak keccak-1600.cpp)
-add_executable(Keccak_test keccak_test.cpp)
+INCLUDE_DIRECTORIES(include)
+add_library(Keccak src/keccak-1600.cpp)
+add_executable(Keccak_test test/keccak_test.cpp)
 
 target_link_libraries(
 	Keccak_test
