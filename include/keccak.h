@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+using namespace std;
+
 const uint8_t STATE_SIZE = 25;
 const uint8_t ROUNDS = 24;
 const uint8_t WIDTH = 64;
@@ -31,6 +33,9 @@ private:
 	void round(int r);
 
 public:
-	Keccak(uint64_t* A);
+	Keccak();
 	uint64_t* keccak_1600();
+	uint64_t* get_state();
 };
+
+static uint64_t* keccak(size_t obits, uint8_t* idata, size_t ibits);

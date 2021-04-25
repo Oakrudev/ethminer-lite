@@ -5,8 +5,7 @@
 using testing::ElementsAreArray;
 
 TEST(KeccakTest, BasicAssertions) {
-	uint64_t a[25] = {0};
-	Keccak k = Keccak(a);
+	Keccak k = Keccak();
 	uint64_t expected[25] = {
         0xF1258F7940E1DDE7, 0x84D5CCF933C0478A, 0xD598261EA65AA9EE, 0xBD1547306F80494D,
         0x8B284E056253D057, 0xFF97A42D7F8E6FD4, 0x90FEE5A0A44647C4, 0x8C5BDA0CD6192E76,

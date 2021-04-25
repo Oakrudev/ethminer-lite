@@ -3,23 +3,43 @@
  * implementation of https://keccak.team/keccak_specs_summary.html
 */
 #include <iostream>
-#include "keccak.h"
+#include "../include/keccak.h"
 
 using namespace std;
+
+void print_states(uint64_t* states) {
+    int x = 0;
+    int y = 0;
+	for (int i=0; i < STATE_SIZE; ++i) {
+        x = i/5;
+        y = i - x * 5;
+		cout <<"0x" << hex << states[x+y*5] << " ";
+		if (( i+1) % 5 == 0) {
+			cout << "\n";
+		}
+	}
+}
 
 /*Rotate bits to the left by s. Note ethash uses little-endian.*/
 uint64_t rot(uint64_t b, uint8_t s) {
 	return (b << s)|(b >> (64 - s));
 }
 
-Keccak::Keccak(uint64_t* A) {
+Keccak::Keccak() {
 	states = (uint64_t*) calloc(STATE_SIZE, 64);
 	for (int i = 0; i < STATE_SIZE; ++i) {
-		states[i] = A[i];
+		states[i] = 0;
 	}
 }
 
+uint64_t* Keccak::get_state() {
+    return states;
+}
+
 uint64_t* Keccak::keccak_1600() {
+    cout << "======================\n";
+    cout << "Before First Round " << "\n"; 
+    print_states(states);
 	for (int i = 0; i < ROUNDS; ++i) {
 		round(i);
 	}
@@ -59,11 +79,6 @@ void  Keccak::round(int ri) {
 
     cout << "======================\n";
     cout << "Round " <<dec<< ri << "\n"; 
-	for (int i=0; i < STATE_SIZE; ++i) {
-		cout <<"0x" << hex << states[i] << " ";
-		if (( i+1) % 5 == 0) {
-			cout << "\n";
-		}
-	}
+    print_states(states);
 }
 
