@@ -2,7 +2,6 @@
 
 Miner using ethash for Ethereum V1
 
-
 ## Build with CMake
 ```
 mkdir build
