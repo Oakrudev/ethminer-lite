@@ -365,6 +365,7 @@ FodyWeavers.xsd
 # Ignore the build and lib dirs
 build
 lib/*
+Makefile
 #
 # # Ignore any executables
 bin/*
