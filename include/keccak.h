@@ -30,12 +30,19 @@ static const uint8_t r[25] = {
 class Keccak {
 private:
 	uint64_t* states;
+	bool logging = false;
 	void round(int r);
 
 public:
 	Keccak();
 	uint64_t* keccak_1600();
 	uint64_t* get_state();
+	void clear_state();
+	void enable_logging();
 };
 
 static uint64_t* keccak(size_t obits, uint8_t* idata, size_t ibits);
+uint64_t* keccak224(uint8_t* data, size_t ibytes);
+uint64_t* keccak256(uint8_t* data, size_t ibytes);
+uint64_t* keccak384(uint8_t* data, size_t ibytes);
+uint64_t* keccak512(uint8_t* data, size_t ibytes);

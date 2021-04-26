@@ -5,24 +5,9 @@
 
 #include <iostream>
 #include <cstring>
-#include "../include/keccak.h"
-
-#include <bitset>
+#include "keccak.h"
 
 using namespace std;
-
-void print(uint8_t* d, size_t s) {
-    cout << "DEBUG+++++++++++++++++\n";
-    int c = 0;
-    cout << "size " << s << "\nhex: \n";
-    while (c < s) {
-        cout << bitset<8>(*(d++)) << " ";
-        c++;
-        if (c % 5 == 0)
-            cout << "\n";
-    }
-    cout << "\n";
-}
 
 uint64_t word_from_data(uint8_t* data) {
     return *((uint64_t*) data);
@@ -31,6 +16,7 @@ uint64_t word_from_data(uint8_t* data) {
 static uint64_t* keccak(size_t obits, uint8_t* idata, size_t ibytes) {
     size_t c = obits * 2;
     size_t r = 1600 - c;
+    uint64_t* hash = (uint64_t*) calloc(obits, obits/8);
     Keccak k = Keccak();
     // padding - can use more memory to create new padded string.
     // Or handle the last block separately to save memory. Going
@@ -42,7 +28,6 @@ static uint64_t* keccak(size_t obits, uint8_t* idata, size_t ibytes) {
     memcpy(p, idata, ibytes);
     p[ibytes] = 0x01;
     p[p_bytes-1] = 0x80;
-    //print(p, p_bytes);
 
     // initialization
     uint64_t* states = k.get_state();
@@ -53,16 +38,40 @@ static uint64_t* keccak(size_t obits, uint8_t* idata, size_t ibytes) {
     int y = 0;
     for (int i=0; i<blocks; ++i) {
         for (int j=0; j<r/64; ++j) {
-            states[j] ^= *(uint64_t*) (p+(j*8));
+            states[j] ^= *(uint64_t*) (p+(j*8)+i*block_bytes);
         }
         k.keccak_1600();
     }
 
     // squeezing phase
-    return 0;
+    size_t hash_length = 0;
+    int i_state = 0;
+    memcpy(hash, states, 64);
+    hash_length += 64;
+    while (hash_length < obits) {
+        memcpy(hash+hash_length/8, &states[i_state++], 64);
+        hash_length += 64;
+    }
+    // Reverse endianess to convert 64 bits to byte array
+    for(int i=0;i<hash_length/64;++i) {
+        hash[i] = __builtin_bswap64(hash[i]);
+    }
+
+    return hash;
 }
 
-int main() {
-    uint8_t* data =(uint8_t*) "0";
-    keccak(256, data, 1);
+uint64_t* keccak224(uint8_t* data, size_t ibytes) {
+    return keccak(224, data, ibytes);
+}
+
+uint64_t* keccak256(uint8_t* data, size_t ibytes) {
+    return keccak(256, data, ibytes);
+}
+
+uint64_t* keccak384(uint8_t* data, size_t ibytes) {
+    return keccak(384, data, ibytes);
+}
+
+uint64_t* keccak512(uint8_t* data, size_t ibytes) {
+    return keccak(512, data, ibytes);
 }
