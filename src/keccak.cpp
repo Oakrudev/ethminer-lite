@@ -13,10 +13,9 @@ uint64_t word_from_data(uint8_t* data) {
     return *((uint64_t*) data);
 }
 
-static uint64_t* keccak(size_t obits, uint8_t* idata, size_t ibytes) {
+static void keccak(uint64_t* hash, size_t obits, uint8_t* idata, size_t ibytes) {
     size_t c = obits * 2;
     size_t r = 1600 - c;
-    uint64_t* hash = (uint64_t*) calloc(obits, obits/8);
     Keccak k = Keccak();
     // padding - can use more memory to create new padded string.
     // Or handle the last block separately to save memory. Going
@@ -53,25 +52,25 @@ static uint64_t* keccak(size_t obits, uint8_t* idata, size_t ibytes) {
         hash_length += 64;
     }
     // Reverse endianess to convert 64 bits to byte array
+    uint64_t hsah = 0;
     for(int i=0;i<hash_length/64;++i) {
         hash[i] = __builtin_bswap64(hash[i]);
     }
-
-    return hash;
+    free(p);
 }
 
-uint64_t* keccak224(uint8_t* data, size_t ibytes) {
-    return keccak(224, data, ibytes);
+void keccak224(uint64_t* hash, uint8_t* data, size_t ibytes) {
+    keccak(hash, 224, data, ibytes);
 }
 
-uint64_t* keccak256(uint8_t* data, size_t ibytes) {
-    return keccak(256, data, ibytes);
+void keccak256(uint64_t* hash, uint8_t* data, size_t ibytes) {
+    keccak(hash, 256, data, ibytes);
 }
 
-uint64_t* keccak384(uint8_t* data, size_t ibytes) {
-    return keccak(384, data, ibytes);
+void keccak384(uint64_t* hash, uint8_t* data, size_t ibytes) {
+    keccak(hash, 384, data, ibytes);
 }
 
-uint64_t* keccak512(uint8_t* data, size_t ibytes) {
-    return keccak(512, data, ibytes);
+void keccak512(uint64_t* hash, uint8_t* data, size_t ibytes) {
+    keccak(hash, 512, data, ibytes);
 }

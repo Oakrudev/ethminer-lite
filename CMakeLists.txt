@@ -14,16 +14,20 @@ FetchContent_Declare(
     URL https://github.com/google/googletest/archive/refs/tags/release-1.10.0.zip
 )
 
+add_subdirectory(external/glog)
 
 INCLUDE_DIRECTORIES(include)
 add_library(Keccak src/keccak-1600.cpp src/keccak.cpp)
 add_executable(Keccak_test test/keccak_test.cpp)
+
+target_link_libraries(Keccak glog::glog)
 
 target_link_libraries(
 	Keccak_test
 	Keccak
 	gtest_main
 	gmock_main
+    glog::glog
 )
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)

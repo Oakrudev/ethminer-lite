@@ -3,6 +3,7 @@
  * implementation of https://keccak.team/keccak_specs_summary.html
 */
 #include <iostream>
+#include <glog/logging.h>
 #include "keccak.h"
 
 using namespace std;
@@ -30,6 +31,10 @@ Keccak::Keccak() {
 	for (int i = 0; i < STATE_SIZE; ++i) {
 		states[i] = 0;
 	}
+}
+
+Keccak::~Keccak() {
+    free(states);
 }
 
 void Keccak::enable_logging() {
