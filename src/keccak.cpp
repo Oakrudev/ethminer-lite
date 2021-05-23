@@ -16,7 +16,8 @@ uint64_t word_from_data(uint8_t* data) {
 static void keccak(uint64_t* hash, size_t obits, uint8_t* idata, size_t ibytes) {
     size_t c = obits * 2;
     size_t r = 1600 - c;
-    Keccak k = Keccak();
+    uint64_t* states = (uint64_t*) calloc(STATE_SIZE, 64);
+    Keccak k {states};
     // padding - can use more memory to create new padded string.
     // Or handle the last block separately to save memory. Going
     // with the first option here.
@@ -28,8 +29,6 @@ static void keccak(uint64_t* hash, size_t obits, uint8_t* idata, size_t ibytes) 
     p[ibytes] = 0x01;
     p[p_bytes-1] = 0x80;
 
-    // initialization
-    uint64_t* states = k.get_state();
 
     // absorbing phase
     uint64_t iter_per_block = (r+c)/64;
@@ -52,10 +51,10 @@ static void keccak(uint64_t* hash, size_t obits, uint8_t* idata, size_t ibytes) 
         hash_length += 64;
     }
     // Reverse endianess to convert 64 bits to byte array
-    uint64_t hsah = 0;
     for(int i=0;i<hash_length/64;++i) {
         hash[i] = __builtin_bswap64(hash[i]);
     }
+    free(states);
     free(p);
 }
 

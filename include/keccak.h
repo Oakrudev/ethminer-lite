@@ -32,9 +32,12 @@ private:
 	uint64_t* states;
 	bool logging = false;
 	void round(int r);
+	bool external_states = false;
 
 public:
 	Keccak();
+	Keccak(const Keccak& keccak);
+	Keccak(uint64_t* states);
 	~Keccak();
 	uint64_t* keccak_1600();
 	uint64_t* get_state();

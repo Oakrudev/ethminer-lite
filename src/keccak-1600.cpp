@@ -33,8 +33,26 @@ Keccak::Keccak() {
 	}
 }
 
+Keccak::Keccak(const Keccak& keccak) {
+	states = (uint64_t*) calloc(STATE_SIZE, 64);
+	for (int i = 0; i < STATE_SIZE; ++i) {
+		states[i] = keccak.states[i];
+	}
+}
+
+Keccak::Keccak(uint64_t* states) {
+    external_states = true;
+	for (int i = 0; i < STATE_SIZE; ++i) {
+		states[i] = 0;
+	}
+    Keccak::states = states;
+}
+
 Keccak::~Keccak() {
-    free(states);
+    cout << states << "\n";
+    if(!external_states){
+        free(states);
+    }
 }
 
 void Keccak::enable_logging() {

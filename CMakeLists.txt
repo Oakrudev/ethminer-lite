@@ -19,6 +19,15 @@ add_subdirectory(external/glog)
 INCLUDE_DIRECTORIES(include)
 add_library(Keccak src/keccak-1600.cpp src/keccak.cpp)
 add_executable(Keccak_test test/keccak_test.cpp)
+add_executable(Ethash src/ethash.cpp)
+
+target_link_libraries(
+    Ethash
+	Keccak
+	gtest_main
+	gmock_main
+    glog::glog
+)
 
 target_link_libraries(Keccak glog::glog)
 
