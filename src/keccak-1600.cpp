@@ -49,7 +49,6 @@ Keccak::Keccak(uint64_t* states) {
 }
 
 Keccak::~Keccak() {
-    cout << states << "\n";
     if(!external_states){
         free(states);
     }

@@ -17,7 +17,7 @@ static void keccak(uint64_t* hash, size_t obits, uint8_t* idata, size_t ibytes) 
     size_t c = obits * 2;
     size_t r = 1600 - c;
     uint64_t* states = (uint64_t*) calloc(STATE_SIZE, 64);
-    Keccak k {states};
+    Keccak k (states);
     // padding - can use more memory to create new padded string.
     // Or handle the last block separately to save memory. Going
     // with the first option here.
@@ -44,12 +44,9 @@ static void keccak(uint64_t* hash, size_t obits, uint8_t* idata, size_t ibytes) 
     // squeezing phase
     size_t hash_length = 0;
     int i_state = 0;
-    memcpy(hash, states, 64);
-    hash_length += 64;
-    while (hash_length < obits) {
-        memcpy(hash+hash_length/8, &states[i_state++], 64);
-        hash_length += 64;
-    }
+    memcpy(hash, states, obits/8);
+    hash_length = obits;
+
     // Reverse endianess to convert 64 bits to byte array
     for(int i=0;i<hash_length/64;++i) {
         hash[i] = __builtin_bswap64(hash[i]);
