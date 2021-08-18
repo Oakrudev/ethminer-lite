@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <stdint.h>
+#include "types.h"
 
 namespace ethash {
 	const size_t WORD_BYTES = 4;                      // bytes in word
@@ -20,14 +21,16 @@ namespace ethash {
 	uint32_t get_cache_size(uint32_t block_number);
 	uint32_t get_full_size(uint32_t block_number);
 
-	uint64_t mkcache(uint32_t cache_size, uint64_t seed);
+	hash_512* mkcache(uint64_t cache_size, hash_256 seed);
 
 	uint32_t fnv(uint32_t v1, uint32_t v2);
 
 	uint64_t calc_dataset_item(uint64_t* cache, uint32_t i);
 	uint64_t* calc_dataset(uint32_t full_size, uint64_t* cache);
 
-	uint8_t* get_seedhash(uint32_t block);
+	void get_seedhash(hash_256* seed, uint64_t block);
 
 	void hashimoto(uint64_t header, uint64_t* nonce, uint32_t full_size);
+
+	hash_512* element_wise_xor(hash_512* h1, hash_512* h2);
 }
